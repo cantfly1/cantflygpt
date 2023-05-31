@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>chatgpt YouTube Videos and Articles</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #F0F0F0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            align-items: center;
+        }
+
+        label {
+            font-size: 18px;
+            margin-right: 10px;
+        }
+
+        input[type="text"] {
+            padding: 8px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button[type="submit"] {
+            padding: 8px 16px;
+            background-color: #4D4D4D;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #333333;
+        }
+
+        #video-links,
+        #articles {
+            margin-top: 20px;
+        }
+
+        #video-links p,
+        #articles p {
+            margin: 0;
+            padding: 8px;
+            background-color: #FFFFFF;
+            border-radius: 4px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #video-links p a,
+        #articles p a {
+            color: #333333;
+            text-decoration: none;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Scraping chatgpt Videos and Articles</h1>
+    <form id="scrape-form">
+        <label for="prompt">Enter your request:</label>
+        <input type="text" id="prompt" name="prompt" required>
+        <button type="submit">Scrape</button>
+    </form>
+    <div id="video-links"></div>
+    <div id="articles"></div>
+
+    <script>
+        $(document).ready(function() {
+            $('#scrape-form').submit(function(event) {
+                event.preventDefault();
+                var prompt = $('#prompt').val();
+
+                $.ajax({
+                    url: '/api/scrape',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ 'prompt': prompt }),
+                    success: function(response) {
+                        var videoLinks = response.video_links;
+                        var articles = response.articles;
+
+                        var linksHtml = '';
+                        for (var i = 0; i < videoLinks.length; i++) {
+                            linksHtml += '<p><a href="' + videoLinks[i] + '">' + videoLinks[i] + '</a></p>';
+                        }
+                        $('#video-links').html(linksHtml);
+
+                        var articlesHtml = '';
+                        for (var j = 0; j < articles.length; j++) {
+                            articlesHtml += '<p><a href="' + articles[j].link + '">' + articles[j].title + '</a></p>';
+                        }
+                        $('#articles').html(articlesHtml);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
