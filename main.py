@@ -5,6 +5,9 @@ import openai
 app = Flask(__name__)
 openai.api_key = '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'
 #add index.hmlt
+@app.route('/')
+def index():
+    return render_template('index.html')
 async def generate_response(prompt):
     response = openai.Completion.create(
         engine='text-davinci-003',
