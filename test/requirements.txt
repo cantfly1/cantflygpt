@@ -1,5 +1,0 @@
-Flask
-openai
-requests
-beautifulsoup4
-os

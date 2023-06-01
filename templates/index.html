@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OpenAI API Demo</title>
+    <style>
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>OpenAI API Demo</h1>
+        <form id="promptForm">
+            <label for="brandSector">Brand Sector:</label>
+            <input type="text" id="brandSector" name="brandSector">
+            <br>
+            <label for="brandName">Brand Name:</label>
+            <input type="text" id="brandName" name="brandName">
+            <br>
+            <label for="projectObjective">Project Objective:</label>
+            <input type="text" id="projectObjective" name="projectObjective">
+            <br>
+            <button type="submit">Generate</button>
+        </form>
+        <div id="response"></div>
+    </div>
+
+    <script>
+        document.getElementById("promptForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            var brandSector = document.getElementById("brandSector").value;
+            var brandName = document.getElementById("brandName").value;
+            var projectObjective = document.getElementById("projectObjective").value;
+
+            var prompt = "Brand Sector: " + brandSector + "\n"
+                       + "Brand Name: " + brandName + "\n"
+                       + "Project Objective: " + projectObjective;
+
+            fetch("/generate", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    "prompt": prompt
+                })
+            })
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(data) {
+                var responseElement = document.getElementById("response");
+                responseElement.innerHTML = "<h2>Response:</h2>" + "<p>" + data.response + "</p>";
+            });
+        });
+    </script>
+</body>
+</html>
